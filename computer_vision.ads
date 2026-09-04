@@ -23,14 +23,14 @@ package Computer_Vision is
 
    -- Pre-defined kernels for edge detection variants
    Sobel_X_Kernel : constant Kernel :=
-     ((-1.0, 0.0, 1.0),
-      (-2.0, 0.0, 2.0),
-      (-1.0, 0.0, 1.0));
+     [[-1.0, 0.0, 1.0],
+      [-2.0, 0.0, 2.0],
+      [-1.0, 0.0, 1.0]];
 
    Sobel_Y_Kernel : constant Kernel :=
-     ((-1.0, -2.0, -1.0),
-      ( 0.0,  0.0,  0.0),
-      ( 1.0,  2.0,  1.0));
+     [[-1.0, -2.0, -1.0],
+      [ 0.0,  0.0,  0.0],
+      [ 1.0,  2.0,  1.0]];
 
    -- Variant 1: Grayscale via simple averaging of RGB channels
    function To_Grayscale_Average (Input : RGB_Image) return Image
