@@ -18,19 +18,19 @@ procedure Tests is
 
    -- Test Inputs
    RGB_Test : constant RGB_Image (1 .. 2, 1 .. 2) :=
-     (((R => 255, G => 0,   B => 0),   (R => 0,   G => 255, B => 0)),
-      ((R => 0,   G => 0,   B => 255), (R => 255, G => 255, B => 255)));
+     [[(R => 255, G => 0,   B => 0),   (R => 0,   G => 255, B => 0)],
+      [(R => 0,   G => 0,   B => 255), (R => 255, G => 255, B => 255)]];
       
    Solid_Img : constant Image (1 .. 3, 1 .. 3) :=
-     (others => (others => 100));
+     [others => [others => 100]];
      
    Edge_Img  : constant Image (1 .. 3, 1 .. 3) :=
-     ((0, 255, 0),
-      (0, 255, 0),
-      (0, 255, 0));
+     [[0, 255, 0],
+      [0, 255, 0],
+      [0, 255, 0]];
 
-   Empty_RGB : constant RGB_Image (1 .. 0, 1 .. 0) := (others => (others => (0, 0, 0)));
-   Empty_Img : constant Image (1 .. 0, 1 .. 0) := (others => (others => 0));
+   Empty_RGB : constant RGB_Image (1 .. 0, 1 .. 0) := [others => [others => (0, 0, 0)]];
+   Empty_Img : constant Image (1 .. 0, 1 .. 0) := [others => [others => 0]];
 
    Res_Img   : Image (1 .. 2, 1 .. 2);
    Res_Solid : Image (1 .. 3, 1 .. 3);
@@ -50,9 +50,9 @@ begin
    Put_Line ("TEST 3 - Convolution Identity");
    declare
       Id_Kernel : constant Kernel :=
-        ((0.0, 0.0, 0.0),
-         (0.0, 1.0, 0.0),
-         (0.0, 0.0, 0.0));
+        [[0.0, 0.0, 0.0],
+         [0.0, 1.0, 0.0],
+         [0.0, 0.0, 0.0]];
    begin
       Res_Solid := Convolve (Solid_Img, Id_Kernel);
       Check ("3.1 Top-Left is unchanged", Res_Solid (1, 1) = 100);
@@ -62,7 +62,7 @@ begin
 
    Put_Line ("TEST 4 - Convolution Zero-Out");
    declare
-      Zero_Kernel : constant Kernel := (others => (others => 0.0));
+      Zero_Kernel : constant Kernel := [others => [others => 0.0]];
    begin
       Res_Solid := Convolve (Solid_Img, Zero_Kernel);
       Check ("4.1 Top-Left is zeroed", Res_Solid (1, 1) = 0);
@@ -73,9 +73,9 @@ begin
    Put_Line ("TEST 5 - Convolution Clamp Max");
    declare
       High_Kernel : constant Kernel :=
-        ((0.0, 0.0, 0.0),
-         (0.0, 5.0, 0.0), -- 5 * 100 = 500 which is > 255
-         (0.0, 0.0, 0.0));
+        [[0.0, 0.0, 0.0],
+         [0.0, 5.0, 0.0], -- 5 * 100 = 500 which is > 255
+         [0.0, 0.0, 0.0]];
    begin
       Res_Solid := Convolve (Solid_Img, High_Kernel);
       Check ("5.1 Top-Left clamped to 255 max limit", Res_Solid (1, 1) = 255);
@@ -86,9 +86,9 @@ begin
    Put_Line ("TEST 6 - Convolution Clamp Min");
    declare
       Neg_Kernel : constant Kernel :=
-        ((0.0, 0.0, 0.0),
-         (0.0, -2.0, 0.0), -- -2 * 100 = -200 which is < 0
-         (0.0, 0.0, 0.0));
+        [[0.0, 0.0, 0.0],
+         [0.0, -2.0, 0.0], -- -2 * 100 = -200 which is < 0
+         [0.0, 0.0, 0.0]];
    begin
       Res_Solid := Convolve (Solid_Img, Neg_Kernel);
       Check ("6.1 Top-Left clamped to 0 min limit", Res_Solid (1, 1) = 0);
@@ -124,7 +124,7 @@ begin
 
    Put_Line ("TEST 11 - Single Pixel Image Edge Cases");
    declare
-      Single : constant Image (1 .. 1, 1 .. 1) := (others => (others => 128));
+      Single : constant Image (1 .. 1, 1 .. 1) := [others => [others => 128]];
       Res    : Image (1 .. 1, 1 .. 1);
    begin
       Res := Sobel_Magnitude (Single);
@@ -143,6 +143,7 @@ begin
          declare
             -- Attempt processing on zero-length array
             Res : Image := To_Grayscale_Average (Empty_RGB);
+            pragma Unreferenced (Res);
          begin
             Failed := False;
          end;
@@ -155,6 +156,7 @@ begin
       begin
          declare
             Res : Image := To_Grayscale_Luminosity (Empty_RGB);
+            pragma Unreferenced (Res);
          begin
             Failed := False;
          end;
@@ -167,6 +169,7 @@ begin
       begin
          declare
             Res : Image := Sobel_Y (Empty_Img);
+            pragma Unreferenced (Res);
          begin
             Failed := False;
          end;
@@ -184,6 +187,7 @@ begin
       begin
          declare
             Res : Image := Convolve (Empty_Img, Sobel_X_Kernel);
+            pragma Unreferenced (Res);
          begin
             Failed := False;
          end;
@@ -196,6 +200,7 @@ begin
       begin
          declare
             Res : Image := Sobel_X (Empty_Img);
+            pragma Unreferenced (Res);
          begin
             Failed := False;
          end;
@@ -208,6 +213,7 @@ begin
       begin
          declare
             Res : Image := Sobel_Magnitude (Empty_Img);
+            pragma Unreferenced (Res);
          begin
             Failed := False;
          end;
